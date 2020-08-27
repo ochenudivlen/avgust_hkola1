@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <math.h>
-#include <stdlib.h>
 
 int const INFINITELY = -1;
 double const ERROR = 0.0000001;
@@ -8,7 +7,7 @@ double const ERROR = 0.0000001;
 
 //-----------------------------------------------------------------------------
 
-int Solve_error (double Number)
+int CompareZero (double Number)
 {
    if (Number < -ERROR)
    {
@@ -27,14 +26,14 @@ int Solve_error (double Number)
 
 int Linear_equation (double coeff_a, double coeff_b, double* result)   //---equation ax + b = 0
 {
-   if (Solve_error (coeff_a) == 0 && Solve_error (coeff_b) == 0)
+   if (CompareZero (coeff_a) == 0 && CompareZero (coeff_b) == 0)
    {
       return INFINITELY;
    }
 
    //---Now not INFINITELY
 
-   if (Solve_error (coeff_a) == 0)
+   if (CompareZero (coeff_a) == 0)
    {
       return 0;   //---b != 0
    }
@@ -49,12 +48,12 @@ int Quadratic_equation (double coeff_a, double coeff_b, double coeff_c, double* 
 {
    double diskr = coeff_b * coeff_b - 4 * coeff_a * coeff_c;
 
-   if (Solve_error (diskr) == -1)
+   if (CompareZero (diskr) == -1)
    {
       return 0;
    }
 
-   if (Solve_error (diskr) == 0)
+   if (CompareZero (diskr) == 0)
    {
       *result1 = *result2 = -coeff_b / (2 * coeff_a);
       return 1;
@@ -69,13 +68,13 @@ int Quadratic_equation (double coeff_a, double coeff_b, double coeff_c, double* 
 
 void Solve_equation (double coeff1, double coeff2, double coeff3, int* Solutions, double* result1, double* result2)
 {
-   if (Solve_error (coeff1) == 0)
+   if (CompareZero (coeff1) == 0)
    {
-      *Solutions = Linear_equation (coeff2, coeff3, &result1);
+      *Solutions = Linear_equation (coeff2, coeff3, result1);
    }
    else
    {
-      *Solutions = Quadratic_equation (coeff1, coeff2, coeff3, &result1, &result2);
+      *Solutions = Quadratic_equation (coeff1, coeff2, coeff3, result1, result2);
    }
 }
 
