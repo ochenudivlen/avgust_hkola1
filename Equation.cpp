@@ -3,42 +3,65 @@
 #include <stdlib.h>
 
 int const INFINITELY = -1;
+double const ERROR = 0.0000001;
+
 
 //-----------------------------------------------------------------------------
 
-int Linear_equation (double coeff_a, double coeff_b, double** result)   //------equation ax + b = 0
+int Solve_error (double Number)
 {
-   if (coeff_a == 0 && coeff_b == 0)
+   if (Number < -ERROR)
+   {
+      return -1;   //---Number < 0
+   }
+
+   if (fabs(Number) < ERROR)
+   {
+      return 0;   //---Number == 0
+   }
+
+   return 1;   //---Number>0
+}
+
+//-----------------------------------------------------------------------------
+
+int Linear_equation (double coeff_a, double coeff_b, double* result)   //---equation ax + b = 0
+{
+   if (Solve_error (coeff_a) == 0 && Solve_error (coeff_b) == 0)
    {
       return INFINITELY;
    }
 
-   if (coeff_a == 0)   //------------------------------------------------------Now not INFINITELY
+   //---Now not INFINITELY
+
+   if (Solve_error (coeff_a) == 0)
    {
-      return 0;   //-----------------------------------------------------------b != 0
+      return 0;   //---b != 0
    }
 
-   **result = -coeff_b / coeff_a;   //------------------------------------------a != 0
+   *result = -coeff_b / coeff_a;   //---a != 0
    return 1;
 }
 
 //-----------------------------------------------------------------------------
 
-int Quadratic_equation (double coeff_a, double coeff_b, double coeff_c, double** result1, double** result2)   // equation ax^2 + bx + c = 0
+int Quadratic_equation (double coeff_a, double coeff_b, double coeff_c, double* result1, double* result2)   //---equation ax^2 + bx + c = 0
 {
    double diskr = coeff_b * coeff_b - 4 * coeff_a * coeff_c;
 
-   if (diskr < -0.0000001)
+   if (Solve_error (diskr) == -1)
    {
       return 0;
    }
-   if (abs (diskr) < 0.0000001)
+
+   if (Solve_error (diskr) == 0)
    {
-      **result1 = **result2 = -coeff_b / (2 * coeff_a);
+      *result1 = *result2 = -coeff_b / (2 * coeff_a);
       return 1;
    }
-      **result1 = (-coeff_b + sqrt (diskr)) / (2 * coeff_a);
-      **result2 = (-coeff_b - sqrt (diskr)) / (2 * coeff_a);
+
+      *result1 = (-coeff_b + sqrt (diskr)) / (2 * coeff_a);
+      *result2 = (-coeff_b - sqrt (diskr)) / (2 * coeff_a);
       return 2;
 }
 
@@ -46,7 +69,7 @@ int Quadratic_equation (double coeff_a, double coeff_b, double coeff_c, double**
 
 void Solve_equation (double coeff1, double coeff2, double coeff3, int* Solutions, double* result1, double* result2)
 {
-   if (abs (coeff1) < 0.0000001)
+   if (Solve_error (coeff1) == 0)
    {
       *Solutions = Linear_equation (coeff2, coeff3, &result1);
    }
