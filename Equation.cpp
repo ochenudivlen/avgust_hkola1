@@ -12,7 +12,7 @@ int const MORE_THAN_ZERO        = 1;
 int const NOROOTS               = -2;
 int const INFINITELY            = -3;
 int const BEFORE_CHECK          = NAN;
-double const ERROR              = 0.001;
+double const ERROR              = 0.0001;
 double const BEFORE_DETERMINING = NAN;
 
 //-----------------------------------------------------------------------------
@@ -59,7 +59,7 @@ int main()
     printf ("\n\nSolve_equation, unit-tests: \n");
     printf ("Number of successfully passed tests: %d\n\n", UT_Solve_equation());
 */
-    printf("%d\n", Unit_tests());
+    printf("Number of failed tests: %d\n", Unit_tests());
     return 0;
 
     double coeff_a = BEFORE_DETERMINING,
@@ -133,7 +133,7 @@ int UT_Compare_zero()
     int answer = LESS_THAN_ZERO;
     int num = 1;
 
-    #define TEST                            \
+    #define TEST_Compare_zero               \
     solution = Compare_zero (value);        \
     if (solution == answer)                 \
     {                                       \
@@ -143,31 +143,31 @@ int UT_Compare_zero()
     else                                    \
         printf ("Test #%d - fail: Compare_zero (%lg) == %d, should be %d\n", num, value, solution, answer);
 
-    TEST;
+    TEST_Compare_zero;
 
     value = 0;
     answer = EQUAL_TO_ZERO;
     num++;
 
-    TEST;
+    TEST_Compare_zero;
 
     value = 1;
     answer = MORE_THAN_ZERO;
     num++;
 
-    TEST;
+    TEST_Compare_zero;
 
     value = -ERROR;
     answer = LESS_THAN_ZERO;
     num++;
 
-    TEST;
+    TEST_Compare_zero;
 
     value = ERROR;
     answer = MORE_THAN_ZERO;
     num++;
 
-    TEST;
+    TEST_Compare_zero;
 
     return n_luck_tests;
 }
@@ -279,7 +279,7 @@ int UT_Solve_equation()
     int answer = INFINITELY;
     int num = 1;
 
-    #define TEST                                                                                                                                                    \
+    #define TEST_Solve_equation                                                                                                                                                    \
     solution = Solve_equation (test_ca, test_cb, test_cc, &root1, &root2);                                                                                          \
     sol1 = test_ca * root1 * root1 + test_cb * root1 + test_cc;                                                                                                     \
     sol2 = test_ca * root2 * root2 + test_cb * root2 + test_cc;                                                                                                     \
@@ -293,7 +293,7 @@ int UT_Solve_equation()
     if (solution == 1)                                                                                                                                              \
         sol2 = 0;                                                                                                                                                   \
                                                                                                                                                                     \
-    if (solution == answer && sol1 == 0 && sol2 == 0)                                                                                                               \
+    if (solution == answer && Compare_zero(sol1) == EQUAL_TO_ZERO && Compare_zero(sol2) == EQUAL_TO_ZERO)                                                                                                               \
     {                                                                                                                                                               \
         printf ("Test #%d - luck\n", num);                                                                                                                          \
         n_luck_tests++;                                                                                                                                             \
@@ -304,7 +304,7 @@ int UT_Solve_equation()
     sol1 = sol2 = 0;                                                                                                                                                \
     root1 = root2 = 0;
 
-    TEST;
+    TEST_Solve_equation;
 
     test_ca = 5;
     test_cb = 6;
@@ -312,7 +312,7 @@ int UT_Solve_equation()
     answer = NOROOTS;
     num++;
 
-    TEST;
+    TEST_Solve_equation;
 
     test_ca = 1;
     test_cb = -2;
@@ -320,7 +320,7 @@ int UT_Solve_equation()
     answer = 1;
     num++;
 
-    TEST;
+    TEST_Solve_equation;
 
     test_ca = 2;
     test_cb = 5;
@@ -328,7 +328,7 @@ int UT_Solve_equation()
     answer = 2;
     num++;
 
-    TEST;
+    TEST_Solve_equation;
 
     test_ca = 0;
     test_cb = 0;
@@ -336,7 +336,7 @@ int UT_Solve_equation()
     answer = NOROOTS;
     num++;
 
-    TEST;
+    TEST_Solve_equation;
 
     test_ca = 0;
     test_cb = 1;
@@ -344,7 +344,7 @@ int UT_Solve_equation()
     answer = 1;
     num++;
 
-    TEST;
+    TEST_Solve_equation;
 
     return n_luck_tests;
 
@@ -383,9 +383,13 @@ int Checking_coeff (double* coeff_a, double* coeff_b, double* coeff_c)
 
 //-----------------------------------------------------------------------------
 
+// int Unit_tests()
+// ! This function does unit-tests
+
 int Unit_tests()
 {
     srand(time(NULL));
+
     int n_fail_tests = 0;
     int solution = 0;
     int num = 0;
