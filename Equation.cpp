@@ -12,7 +12,7 @@ int const MORE_THAN_ZERO        = 1;
 int const NOROOTS               = -2;
 int const INFINITELY            = -3;
 int const BEFORE_CHECK          = NAN;
-double const ERROR              = 0.0000001;
+double const ERROR              = 0.001;
 double const BEFORE_DETERMINING = NAN;
 
 //-----------------------------------------------------------------------------
@@ -417,7 +417,7 @@ int Unit_tests()
         if (solution == 1)  //---If there is only one root
             sol2 = 0;
 
-        if (sol1 == 0 && sol2 == 0)
+        if (Compare_zero(sol1) == EQUAL_TO_ZERO && Compare_zero(sol2) == EQUAL_TO_ZERO)
             printf ("Test #%d - luck\n", num);
         else
         {
