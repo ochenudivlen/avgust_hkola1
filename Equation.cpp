@@ -9,25 +9,18 @@
 int const LESS_THAN_ZERO        = -1;
 int const EQUAL_TO_ZERO         = 0;
 int const MORE_THAN_ZERO        = 1;
-int const NOROOTS               = -2;
-int const INFINITELY            = -3;
-int const BEFORE_CHECK          = NAN;
-double const ERROR              = 0.0001;
-double const BEFORE_DETERMINING = NAN;
+int const NOROOTS               = 0;
+int const INFINITELY            = -1;
 
 //-----------------------------------------------------------------------------
 
 int Compare_zero (double value);
-
-int UT_Compare_zero();
 
 int Linear_equation (double coeff_a, double coeff_b, double* result);
 
 int Quadratic_equation (double coeff_a, double coeff_b, double coeff_c, double* result1, double* result2);
 
 int Solve_equation (double coeff_a, double coeff_b, double coeff_c, double* result1, double* result2);
-
-int UT_Solve_equation();
 
 int Checking_coeff (double* coeff_a, double* coeff_b, double* coeff_c);
 
@@ -51,16 +44,11 @@ int main()
 {
     printf ("# Solution of a quadratic equation\n"
             "# 27.08.2020\n\n"
-            "# Enter coefficients a, b, c: \n\n");
+            "# Enter coefficients a, b, c: ");
 
-/*
-    printf ("Compare_zero, unit-tests: \n");
-    printf ("Number of successfully passed tests: %d", UT_Compare_zero());
-    printf ("\n\nSolve_equation, unit-tests: \n");
-    printf ("Number of successfully passed tests: %d\n\n", UT_Solve_equation());
-*/
-    printf("Number of failed tests: %d\n", Unit_tests());
-    return 0;
+    Unit_tests();
+
+    double const BEFORE_DETERMINING = NAN;
 
     double coeff_a = BEFORE_DETERMINING,
            coeff_b = BEFORE_DETERMINING,
@@ -109,6 +97,8 @@ int main()
 
 int Compare_zero (double value)
 {
+    double const ERROR = 0.0001;
+
     if (value <= -ERROR)
         return LESS_THAN_ZERO;  //---value < 0
 
@@ -116,60 +106,6 @@ int Compare_zero (double value)
         return EQUAL_TO_ZERO;   //---value == 0
 
     return MORE_THAN_ZERO;   //---value > 0
-}
-
-
-//-----------------------------------------------------------------------------
-
-// int UT_Compare_zero()
-// ! This function does unit-tests
-
-int UT_Compare_zero()
-{
-    int n_luck_tests = 0;
-    int solution = 0;
-
-    double value = -1;
-    int answer = LESS_THAN_ZERO;
-    int num = 1;
-
-    #define TEST_Compare_zero               \
-    solution = Compare_zero (value);        \
-    if (solution == answer)                 \
-    {                                       \
-        printf ("Test #%d - luck\n", num);  \
-        n_luck_tests++;                     \
-    }                                       \
-    else                                    \
-        printf ("Test #%d - fail: Compare_zero (%lg) == %d, should be %d\n", num, value, solution, answer);
-
-    TEST_Compare_zero;
-
-    value = 0;
-    answer = EQUAL_TO_ZERO;
-    num++;
-
-    TEST_Compare_zero;
-
-    value = 1;
-    answer = MORE_THAN_ZERO;
-    num++;
-
-    TEST_Compare_zero;
-
-    value = -ERROR;
-    answer = LESS_THAN_ZERO;
-    num++;
-
-    TEST_Compare_zero;
-
-    value = ERROR;
-    answer = MORE_THAN_ZERO;
-    num++;
-
-    TEST_Compare_zero;
-
-    return n_luck_tests;
 }
 
 //-----------------------------------------------------------------------------
@@ -261,97 +197,6 @@ int Solve_equation (double coeff_a, double coeff_b, double coeff_c, double* resu
 
 //-----------------------------------------------------------------------------
 
-// int UT_Solve_equation()
-// ! This function does unit-tests
-
-int UT_Solve_equation()
-{
-    int n_luck_tests = 0;
-    int solution = 0;
-    double root1 = 0;
-    double root2 = 0;
-    double sol1 = 0;  //---Variable for calculating the value of the equation when substituting roots
-    double sol2 = 0;
-
-    double test_ca = 0;
-    double test_cb = 0;
-    double test_cc = 0;
-    int answer = INFINITELY;
-    int num = 1;
-
-    #define TEST_Solve_equation                                                                                                                                                    \
-    solution = Solve_equation (test_ca, test_cb, test_cc, &root1, &root2);                                                                                          \
-    sol1 = test_ca * root1 * root1 + test_cb * root1 + test_cc;                                                                                                     \
-    sol2 = test_ca * root2 * root2 + test_cb * root2 + test_cc;                                                                                                     \
-                                                                                                                                                                    \
-    if (solution == NOROOTS)                                                                                                                                        \
-    {                                                                                                                                                               \
-        sol1 = 0;                                                                                                                                                   \
-        sol2 = 0;                                                                                                                                                   \
-    }                                                                                                                                                               \
-                                                                                                                                                                    \
-    if (solution == 1)                                                                                                                                              \
-        sol2 = 0;                                                                                                                                                   \
-                                                                                                                                                                    \
-    if (solution == answer && Compare_zero(sol1) == EQUAL_TO_ZERO && Compare_zero(sol2) == EQUAL_TO_ZERO)                                                                                                               \
-    {                                                                                                                                                               \
-        printf ("Test #%d - luck\n", num);                                                                                                                          \
-        n_luck_tests++;                                                                                                                                             \
-    }                                                                                                                                                               \
-    else                                                                                                                                                            \
-        printf ("Test #%d - fail: Solve_equation (%lg, %lg, %lg, %lg, %lg) == %d, should be %d\n", num, test_ca, test_cb, test_cc, root1, root2, solution, answer); \
-                                                                                                                                                                    \
-    sol1 = sol2 = 0;                                                                                                                                                \
-    root1 = root2 = 0;
-
-    TEST_Solve_equation;
-
-    test_ca = 5;
-    test_cb = 6;
-    test_cc = 7;
-    answer = NOROOTS;
-    num++;
-
-    TEST_Solve_equation;
-
-    test_ca = 1;
-    test_cb = -2;
-    test_cc = 1;
-    answer = 1;
-    num++;
-
-    TEST_Solve_equation;
-
-    test_ca = 2;
-    test_cb = 5;
-    test_cc = 2;
-    answer = 2;
-    num++;
-
-    TEST_Solve_equation;
-
-    test_ca = 0;
-    test_cb = 0;
-    test_cc = 1;
-    answer = NOROOTS;
-    num++;
-
-    TEST_Solve_equation;
-
-    test_ca = 0;
-    test_cb = 1;
-    test_cc = -1;
-    answer = 1;
-    num++;
-
-    TEST_Solve_equation;
-
-    return n_luck_tests;
-
-}
-
-//-----------------------------------------------------------------------------
-
 /**
     int Checking_coeff (double* coeff_a, double* coeff_b, double* coeff_c)
 
@@ -389,49 +234,66 @@ int Checking_coeff (double* coeff_a, double* coeff_b, double* coeff_c)
 int Unit_tests()
 {
     srand(time(NULL));
+    char filename[15] = "Unit-tests.txt";
+    FILE* filetests = fopen(filename, "w");
+
+    assert (filetests != NULL);
+
+    fprintf (filetests, "Unit-test\n\n"
+             "infinite number of roots = -1\n\n");
 
     int n_fail_tests = 0;
-    int solution = 0;
     int num = 0;
-    double test_ca = 0;
-    double test_cb = 0;
-    double test_cc = 0;
-    double root1 = 0;
-    double root2 = 0;
-    double sol1 = 0;
-    double sol2 = 0;
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 10000; i++)
     {
+        double test_ca = 0;
+        double test_cb = 0;
+        double test_cc = 0;
+
         test_ca = rand() - RAND_MAX / 2;
         test_cb = rand() - RAND_MAX / 2;
         test_cc = rand() - RAND_MAX / 2;
+
         num++;
 
+        int solution = 0;
+        double root1 = 0;
+        double root2 = 0;
         solution = Solve_equation (test_ca, test_cb, test_cc, &root1, &root2);
-        sol1 = test_ca * root1 * root1 + test_cb * root1 + test_cc;
-        sol2 = test_ca * root2 * root2 + test_cb * root2 + test_cc;
 
-        if (solution == NOROOTS)    //---If there are no roots
+        double expression1 = 0;
+        double expression2 = 0;
+        expression1 = test_ca * root1 * root1 + test_cb * root1 + test_cc;
+        expression2 = test_ca * root2 * root2 + test_cb * root2 + test_cc;
+
+        switch (solution)
         {
-            sol1 = 0;
-            sol2 = 0;
+            case NOROOTS:   //---If there are no roots
+                expression1 = 0;
+                expression2 = 0;
+                break;
+
+            case 1:         //---If there is only one root
+                expression2 = 0;
+                break;
         }
 
-        if (solution == 1)  //---If there is only one root
-            sol2 = 0;
-
-        if (Compare_zero(sol1) == EQUAL_TO_ZERO && Compare_zero(sol2) == EQUAL_TO_ZERO)
-            printf ("Test #%d - luck\n", num);
+        if (Compare_zero (expression1) == EQUAL_TO_ZERO && Compare_zero (expression2) == EQUAL_TO_ZERO)
+            fprintf (filetests, "Test #%d - luck: Solve_equation (%lg, %lg, %lg, %lg, %lg) == %d\n", num, test_ca, test_cb, test_cc, root1, root2, solution);
         else
         {
             n_fail_tests++;
-            printf ("Test #%d - fail: Solve_equation (%lg, %lg, %lg, %lg, %lg) == %d\n", num, test_ca, test_cb, test_cc, root1, root2, solution);
+            fprintf (filetests, "Test #%d - fail: Solve_equation (%lg, %lg, %lg, %lg, %lg) == %d\n", num, test_ca, test_cb, test_cc, root1, root2, solution);
         }
-        sol1 = sol2 = 0;
+        expression1 = expression2 = 0;
         root1 = root2 = 0;
 
     }
+
+    fprintf (filetests, "Number of failed tests: %d\n", n_fail_tests);
+
+    fclose (filetests);
 
     return n_fail_tests;
 }
