@@ -185,6 +185,7 @@ int Solve_equation (double coeff_a, double coeff_b, double coeff_c, double* resu
     assert (isfinite (coeff_a));
     assert (isfinite (coeff_b));
     assert (isfinite (coeff_c));
+
     assert (result1 != NULL);
     assert (result2 != NULL);
     assert (result1 != result2);
@@ -234,7 +235,8 @@ int Checking_coeff (double* coeff_a, double* coeff_b, double* coeff_c)
 int Unit_tests()
 {
     srand(time(NULL));
-    char filename[15] = "Unit-tests.txt";
+
+    const char filename[] = "Unit-tests.txt";
     FILE* filetests = fopen(filename, "w");
 
     assert (filetests != NULL);
@@ -245,27 +247,22 @@ int Unit_tests()
     int n_fail_tests = 0;
     int num = 0;
 
-    for (int i = 0; i < 10000; i++)
-    {
-        double test_ca = 0;
-        double test_cb = 0;
-        double test_cc = 0;
+    const int count_tests = 10000;
 
-        test_ca = rand() - RAND_MAX / 2;
-        test_cb = rand() - RAND_MAX / 2;
-        test_cc = rand() - RAND_MAX / 2;
+    for (int i = 0; i < count_tests; i++)
+    {
+        double test_ca = rand() - RAND_MAX / 2;
+        double test_cb = rand() - RAND_MAX / 2;
+        double test_cc = rand() - RAND_MAX / 2;
 
         num++;
 
-        int solution = 0;
         double root1 = 0;
         double root2 = 0;
-        solution = Solve_equation (test_ca, test_cb, test_cc, &root1, &root2);
+        int solution = Solve_equation (test_ca, test_cb, test_cc, &root1, &root2);
 
-        double expression1 = 0;
-        double expression2 = 0;
-        expression1 = test_ca * root1 * root1 + test_cb * root1 + test_cc;
-        expression2 = test_ca * root2 * root2 + test_cb * root2 + test_cc;
+        double expression1 = test_ca * root1 * root1 + test_cb * root1 + test_cc;
+        double expression2 = test_ca * root2 * root2 + test_cb * root2 + test_cc;
 
         switch (solution)
         {
