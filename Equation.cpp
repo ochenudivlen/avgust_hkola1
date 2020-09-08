@@ -97,7 +97,7 @@ int main()
 
 int Compare_zero (double value)
 {
-    double const ERROR = 0.0001;
+    double const ERROR = 0.000000001;
 
     if (value <= -ERROR)
         return LESS_THAN_ZERO;  //---value < 0
